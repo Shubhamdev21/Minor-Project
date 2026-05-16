@@ -10,7 +10,12 @@ const connectDB = async () => {
 
     if (!uri || uri.includes('localhost') || uri.includes('127.0.0.1')) {
       console.log('Starting MongoDB Memory Server...');
-      const mongoServer = await MongoMemoryServer.create();
+      const mongoServer = await MongoMemoryServer.create({
+        instance: {
+          dbPath: './.mongodb_data',
+          storageEngine: 'ephemeralForTest',
+        }
+      });
       uri = mongoServer.getUri();
     }
 
