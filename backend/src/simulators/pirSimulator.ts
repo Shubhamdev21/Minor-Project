@@ -14,8 +14,8 @@ export const startPirSimulator = () => {
         return; // Skip if simulation is disabled
       }
 
-      // Randomly trigger motion (e.g. 10% chance every 10 seconds)
-      if (Math.random() < 0.1) {
+      // Trigger motion every time (100% chance)
+      if (true) {
         const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
         const confidence = Math.floor(Math.random() * 20) + 80; // 80-100%
         const severity = confidence > 90 ? 'HIGH' : confidence > 85 ? 'MEDIUM' : 'LOW';
@@ -46,25 +46,14 @@ export const startPirSimulator = () => {
           detectedAt: alert.detectedAt,
         });
 
-        console.log(`[SIMULATOR] Motion detected at ${location} (Confidence: ${confidence}%, Severity: ${severity})`);
+        console.log(`[SIMULATOR] Scheduled Alert triggered at ${location} (Every 30s)`);
         
         if (severity === 'HIGH' || severity === 'MEDIUM') {
           await sendTelegramAlert(location, confidence, severity);
-        }
-      } else {
-        // Just log idle status occasionally
-        if (Math.random() < 0.05) {
-          const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
-          await SensorLog.create({
-            status: 'IDLE',
-            location,
-            batteryLevel: Math.floor(Math.random() * 20) + 80,
-            temperature: Math.floor(Math.random() * 15) + 15,
-          });
         }
       }
     } catch (error) {
       console.error('Simulator Error:', error);
     }
-  }, 10000); // Check every 10 seconds
+  }, 30000); // Trigger exactly every 30 seconds
 };

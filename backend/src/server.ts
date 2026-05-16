@@ -47,9 +47,15 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/sensors', sensorRoutes);
 
 import { startPirSimulator } from './simulators/pirSimulator';
+import { seedAdminUser } from './utils/seedData';
 
 // Start Background Jobs
-startPirSimulator();
+const startApp = async () => {
+  await seedAdminUser();
+  startPirSimulator();
+};
+
+startApp();
 
 // WebSocket Events
 io.on('connection', (socket) => {

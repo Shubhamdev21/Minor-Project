@@ -8,7 +8,7 @@ export interface ISettings extends Document {
 }
 
 const SettingsSchema: Schema = new Schema({
-  telegramEnabled: { type: Boolean, default: false },
+  telegramEnabled: { type: Boolean, default: true },
   buzzerEnabled: { type: Boolean, default: true },
   detectionSensitivity: { type: Number, default: 80 },
   simulationMode: { type: Boolean, default: true }
