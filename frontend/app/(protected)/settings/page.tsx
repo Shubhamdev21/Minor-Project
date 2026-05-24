@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch'; // Needs shadcn switch or standard input checkbox if not installed
 import { toast } from 'sonner';
 import api from '@/lib/axios';
 
@@ -13,6 +11,8 @@ export default function SettingsPage() {
     telegramEnabled: false,
     buzzerEnabled: true,
     simulationMode: true,
+    telegramConfigured: false,
+    telegramEnvIssues: '',
   });
 
   useEffect(() => {
@@ -23,6 +23,8 @@ export default function SettingsPage() {
           telegramEnabled: res.data.telegramEnabled,
           buzzerEnabled: res.data.buzzerEnabled,
           simulationMode: res.data.simulationMode,
+          telegramConfigured: res.data.telegramConfigured,
+          telegramEnvIssues: res.data.telegramEnvIssues || '',
         });
       } catch (error) {
         console.error('Failed to fetch settings', error);
@@ -62,6 +64,16 @@ export default function SettingsPage() {
             <div className="space-y-0.5">
               <Label className="text-base text-zinc-200">Telegram Notifications</Label>
               <p className="text-sm text-zinc-400">Receive alerts directly to your Telegram device.</p>
+              {!settings.telegramConfigured ? (
+                <p className="text-sm text-red-400">
+                  Telegram is not fully configured. Set backend environment variables: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.
+                  {settings.telegramEnvIssues ? ` (${settings.telegramEnvIssues})` : ''}
+                </p>
+              ) : settings.telegramEnabled ? (
+                <p className="text-sm text-emerald-400">Telegram is enabled and configured.</p>
+              ) : (
+                <p className="text-sm text-zinc-400">Telegram is currently disabled in the system settings.</p>
+              )}
             </div>
             <input 
               type="checkbox" 

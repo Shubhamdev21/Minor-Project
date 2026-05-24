@@ -1,62 +1,220 @@
-# Smart Intruder Alert System
+Smart Intruder Alert System
+A full-stack IoT-based security monitoring system that simulates a PIR motion sensor and provides real-time intrusion detection, live dashboard monitoring, and instant Telegram notifications.
 
-A modern IoT-inspired security monitoring system that simulates a PIR motion sensor using APIs and provides real-time motion detection, instant Telegram alerts, and live dashboard monitoring.
+The system is designed to demonstrate the integration of sensors, actuators, APIs, WebSockets, cloud communication, and real-time monitoring using modern web technologies.
 
-## Features
-- Real-time motion detection dashboard with WebSocket
-- Sensor simulator
-- Telegram Bot Notifications
-- Animated UI with Framer Motion and shadcn/ui
-- Analytics and Charts using Recharts
-- Authentication with JWT
+Project Overview
+The Smart Intruder Alert System is a security-focused IoT application that detects motion activity and instantly alerts users through a live dashboard and Telegram notifications.
 
-## Technologies Used
-**Frontend**: Next.js 14, TailwindCSS, shadcn/ui, Zustand, Socket.io-client, Axios, Framer Motion
-**Backend**: Node.js, Express, MongoDB (Mongoose), Socket.io, JWT, Winston Logger
+The project simulates a real smart surveillance system where motion events are generated, processed by the backend server, stored in the database, and broadcast to connected clients in real time.
 
-## Setup Instructions
+Main Objectives
+Real-time motion detection monitoring
+Instant intrusion alerts
+Telegram bot notification system
+Sensor simulation using APIs
+Real-time WebSocket communication
+Dashboard analytics and alert history
+Modern responsive user interface
+System Architecture
+┌──────────────────┐
+│  PIR Simulator   │
+│ Motion Detection │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│   Backend API    │
+│ Node.js/Express  │
+└────────┬─────────┘
+         │
+ ┌───────┼────────┐
+ ▼                ▼
+Database      WebSocket Server
+MongoDB       Socket.io
+ │                │
+ ▼                ▼
+Alert Logs    Live Dashboard
+                   │
+                   ▼
+            Telegram Bot Alerts
 
-### Environment Variables
-Check `.env.example` to see the required variables.
+Curricular Integration
+Hardware: PIR motion sensor behavior is modeled in `backend/src/simulators/pirSimulator.ts`, which generates motion events, sensor IDs, and location data.
+Actuators: local alert feedback is provided in `frontend/components/providers/SocketProvider.tsx` by displaying toast alerts and optionally playing a buzzer sound when motion is detected.
+Cloud & Apps: Telegram notifications are sent from `backend/src/services/telegramService.ts` using the Telegram Bot API and environment variables `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`.
 
-### Local Development (Without Docker)
+Note: this repository currently includes Telegram integration, but it does not contain an explicit IFTTT implementation.
 
-1. **Backend**:
-```bash
+Features
+Real-Time Monitoring
+Live motion detection updates
+WebSocket-based real-time dashboard
+Instant UI updates without refresh
+Motion Sensor Simulation
+Simulated PIR motion events
+Random detection intervals
+Multiple virtual locations
+Telegram Notifications
+Instant intrusion alerts
+Telegram Bot API integration
+Real-time notification delivery
+Dashboard Analytics
+Motion activity charts
+Alert history tracking
+Detection analytics using Recharts
+Authentication System
+JWT-based authentication
+Protected dashboard routes
+Secure login system
+Modern UI/UX
+Responsive design
+Framer Motion animations
+TailwindCSS + shadcn/ui components
+Dark themed dashboard
+Technologies Used
+Frontend
+Next.js 14
+TypeScript
+TailwindCSS
+shadcn/ui
+Framer Motion
+Zustand
+Axios
+Socket.io Client
+Recharts
+Backend
+Node.js
+Express.js
+MongoDB
+Mongoose
+Socket.io
+JWT Authentication
+Winston Logger
+Integrations
+Telegram Bot API
+WebSockets
+REST APIs
+Docker
+System Workflow
+Step 1: Motion Detection
+The PIR simulator generates motion events.
+
+Step 2: Backend Processing
+The backend receives motion data through APIs.
+
+Step 3: Database Storage
+Alert data is stored in MongoDB.
+
+Step 4: Real-Time Broadcasting
+Motion events are broadcast using Socket.io.
+
+Step 5: Dashboard Update
+Connected users receive live updates instantly.
+
+Step 6: Telegram Alert
+A Telegram notification is sent to the user.
+
+Dashboard Features
+Live motion status
+Active sensor indicators
+Alert history table
+Real-time charts
+Notification system
+Analytics dashboard
+Telegram Integration
+The project integrates Telegram Bot API for real-time intrusion notifications.
+
+Example alert:
+
+INTRUDER ALERT
+
+Motion Detected
+Location: Front Door
+Time: 10:45 PM
+Severity: HIGH
+Project Structure
+smart-intruder-alert/
+│
+├── frontend/
+├── backend/
+├── docker/
+├── docs/
+├── README.md
+└── docker-compose.yml
+Setup Instructions
+Environment Variables
+Check .env.example for all required variables.
+
+Example:
+
+MONGODB_URI=
+JWT_SECRET=
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+NEXT_PUBLIC_API_URL=
+NEXT_PUBLIC_SOCKET_URL=
+Local Development
+Backend Setup
 cd backend
 npm install
 npm run dev
-```
-
-2. **Frontend**:
-```bash
+Frontend Setup
 cd frontend
 npm install
 npm run dev
-```
+Docker Setup
+To run the complete stack locally:
 
-### Docker Setup
-To run the entire stack locally using Docker Compose:
-```bash
 docker-compose up --build
-```
-This will start MongoDB, Backend (Port 5000), and Frontend (Port 3000).
+This starts:
 
-## Deployment
+MongoDB
+Backend Server
+Frontend Application
+Application URLs
+Service	URL
+Frontend	http://localhost:3000
+Backend	http://localhost:5000
+Deployment
+Frontend Deployment (Vercel)
+Push repository to GitHub
+Import project into Vercel
+Configure environment variables
+Deploy application
+Backend Deployment (Render/Railway)
+Connect GitHub repository
+Configure build command:
+npm install && npm run build
+Configure start command:
+npm start
+Add environment variables
+Database Deployment (MongoDB Atlas)
+Create free MongoDB Atlas cluster
+Configure IP whitelist
+Get connection string
+Add MONGODB_URI
+Security Features
+JWT Authentication
+Protected Routes
+Secure API Validation
+Environment Variable Protection
+Error Handling Middleware
+Future Enhancements
+Real PIR sensor hardware integration
+Camera surveillance support
+AI-based threat detection
+Mobile application
+Push notifications
+Cloud analytics dashboard
+Learning Outcomes
+This project helped in understanding:
 
-### Frontend (Vercel)
-1. Push your repository to GitHub.
-2. Import project into Vercel.
-3. Set `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_SOCKET_URL`.
-
-### Backend (Render/Railway)
-1. Connect GitHub to Render.
-2. Choose Web Service and select the `backend` folder.
-3. Build command: `npm install && npm run build`
-4. Start command: `npm start`
-5. Set the required Environment Variables.
-
-### Database (MongoDB Atlas)
-1. Create a free cluster on MongoDB Atlas.
-2. Whitelist your backend IP.
-3. Get the connection string and set it as `MONGODB_URI`.
+IoT architecture
+Real-time systems
+WebSockets
+Full-stack development
+Telegram Bot API
+Authentication systems
+Sensor integration concepts
+Dashboard analytics

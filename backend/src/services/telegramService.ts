@@ -15,7 +15,7 @@ export const sendTelegramAlert = async (location: string, confidence: number, se
     }
 
     const message = `
-🚨 *INTRUDER ALERT* 🚨
+ *INTRUDER ALERT* 
 
 *Location:* ${location}
 *Time:* ${new Date().toLocaleString()}
@@ -33,3 +33,26 @@ export const sendTelegramAlert = async (location: string, confidence: number, se
     console.error('Failed to send Telegram alert:', error);
   }
 };
+/*
+You create a Bot on Telegram (via @BotFather)
+        ↓
+Telegram gives you a TOKEN (like a password)
+        ↓
+Your code uses that token to send messages
+        ↓
+Messages appear in your Telegram chat
+
+
+ Motion detected in simulator
+        ↓
+ Is telegramEnabled = true in DB?  →  NO → Stop
+        ↓ YES
+ Grab TOKEN + CHAT_ID from .env
+        ↓
+ Build alert message
+        ↓
+ POST request to Telegram API
+        ↓
+ You get notified on your phone!
+
+*/

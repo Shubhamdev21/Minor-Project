@@ -7,7 +7,27 @@ export const getSettings = async (req: Request, res: Response) => {
     if (!settings) {
       settings = await Settings.create({});
     }
-    res.json(settings);
+
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    const telegramConfigured = Boolean(token && chatId);
+    const telegramEnvIssues = telegramConfigured
+      ? null
+      : [
+          !token ? 'Missing TELEGRAM_BOT_TOKEN' : null,
+          !chatId ? 'Missing TELEGRAM_CHAT_ID' : null,
+        ]
+          .filter(Boolean)
+          .join('; ');
+
+    res.json({
+      telegramEnabled: settings.telegramEnabled,
+      buzzerEnabled: settings.buzzerEnabled,
+      detectionSensitivity: settings.detectionSensitivity,
+      simulationMode: settings.simulationMode,
+      telegramConfigured,
+      telegramEnvIssues,
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }

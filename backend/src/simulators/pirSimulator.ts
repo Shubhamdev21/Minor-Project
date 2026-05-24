@@ -57,3 +57,18 @@ export const startPirSimulator = () => {
     }
   }, 30000); // Trigger exactly every 30 seconds
 };
+/* 
+ Every 30s
+    ↓
+ Is simulation ON?  →  NO → Do nothing
+    ↓ YES
+ Pick random location (e.g. "Garage")
+    ↓
+ Generate confidence score (e.g. 94%)
+    ↓
+ Severity = HIGH
+    ↓
+ Save Alert to DB
+ Save Sensor Log to DB📡 Send live update to website (WebSocket)
+ Send Telegram message
+*/
