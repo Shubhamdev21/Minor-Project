@@ -1,5 +1,6 @@
-import axios from 'axios';
-import Settings from '../models/Settings';
+import axios from "axios";
+import Settings from "../models/Settings";
+import Subscriber from "../models/Subscriber";
 
 export const sendTelegramAlert = async (location: string, confidence: number, severity: string) => {
   try {
@@ -7,15 +8,13 @@ export const sendTelegramAlert = async (location: string, confidence: number, se
     if (settings && !settings.telegramEnabled) return;
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
-
-    if (!token || !chatId) {
-      console.warn('Telegram credentials not configured');
+    if (!token) {
+      console.warn("Telegram token not configured");
       return;
     }
 
     const message = `
- *INTRUDER ALERT* 
+?? *INTRUDER ALERT* ??
 
 *Location:* ${location}
 *Time:* ${new Date().toLocaleString()}
@@ -23,36 +22,33 @@ export const sendTelegramAlert = async (location: string, confidence: number, se
 *Severity:* ${severity}
     `;
 
-    await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, {
-      chat_id: chatId,
-      text: message,
-      parse_mode: 'Markdown'
-    });
+    // Send to owner
+    const ownerChatId = process.env.TELEGRAM_CHAT_ID;
+    if (ownerChatId) {
+      await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, {
+        chat_id: ownerChatId,
+        text: message,
+        parse_mode: "Markdown"
+      });
+    }
 
+    // Send to ALL subscribers
+    const subscribers = await Subscriber.find();
+    for (const subscriber of subscribers) {
+      try {
+        await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, {
+          chat_id: subscriber.chatId,
+          text: message,
+          parse_mode: "Markdown"
+        });
+        console.log(`Alert sent to subscriber: ${subscriber.name || subscriber.chatId}`);
+      } catch (err: any) {
+        console.error(`Failed to send to ${subscriber.chatId}: ${err.message}`);
+      }
+    }
+
+    console.log(`Telegram alerts sent to ${subscribers.length + 1} recipients`);
   } catch (error) {
-    console.error('Failed to send Telegram alert:', error);
+    console.error("Failed to send Telegram alert:", error);
   }
 };
-/*
-You create a Bot on Telegram (via @BotFather)
-        ↓
-Telegram gives you a TOKEN (like a password)
-        ↓
-Your code uses that token to send messages
-        ↓
-Messages appear in your Telegram chat
-
-
- Motion detected in simulator
-        ↓
- Is telegramEnabled = true in DB?  →  NO → Stop
-        ↓ YES
- Grab TOKEN + CHAT_ID from .env
-        ↓
- Build alert message
-        ↓
- POST request to Telegram API
-        ↓
- You get notified on your phone!
-
-*/
