@@ -1,19 +1,27 @@
 ﻿'use client';
-
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { useAuthStore } from '@/store/useStore';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
   const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (!user) router.push('/login');
-  }, [user, router]);
+    setHydrated(true);
+  }, []);
 
+  useEffect(() => {
+    if (hydrated && !user) {
+      router.push('/login');
+    }
+  }, [hydrated, user, router]);
+
+  // Wait for hydration before rendering anything
+  if (!hydrated) return null;
   if (!user) return null;
 
   return (

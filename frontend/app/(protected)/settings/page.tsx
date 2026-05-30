@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -70,22 +70,22 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-4 sm:space-y-6 max-w-3xl pb-10">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight text-zinc-100">Settings</h2>
-        <p className="text-zinc-400 mt-1">Manage system configurations and integrations</p>
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">Settings</h2>
+        <p className="text-zinc-400 mt-1 text-sm sm:text-base">Manage system configurations and integrations</p>
       </div>
 
       {/* Telegram Subscription Card */}
       <Card className="bg-zinc-900 border-red-500/30">
-        <CardHeader>
-          <CardTitle className="text-zinc-100">Subscribe to Intruder Alerts</CardTitle>
-          <CardDescription className="text-zinc-400">
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="text-zinc-100 text-base sm:text-lg">Subscribe to Intruder Alerts</CardTitle>
+          <CardDescription className="text-zinc-400 text-sm">
             Get real-time intruder alerts directly on your Telegram!
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="bg-red-500/10 rounded-lg p-4 text-sm space-y-2">
+        <CardContent className="space-y-4 p-4 sm:p-6 pt-0">
+          <div className="bg-red-500/10 rounded-lg p-3 sm:p-4 text-sm space-y-2">
             <p className="font-semibold text-red-400">How to get your Chat ID:</p>
             <ol className="list-decimal list-inside space-y-1 text-zinc-400">
               <li>Open Telegram app</li>
@@ -95,7 +95,7 @@ export default function SettingsPage() {
             </ol>
           </div>
           <div className="space-y-2">
-            <Label className="text-zinc-200">Your Name (optional)</Label>
+            <Label className="text-zinc-200 text-sm">Your Name (optional)</Label>
             <input
               type="text"
               placeholder="Enter your name"
@@ -105,7 +105,7 @@ export default function SettingsPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-zinc-200">Telegram Chat ID</Label>
+            <Label className="text-zinc-200 text-sm">Telegram Chat ID</Label>
             <input
               type="text"
               placeholder="e.g. 123456789"
@@ -117,71 +117,73 @@ export default function SettingsPage() {
           <button
             onClick={handleSubscribe}
             disabled={loading}
-            className="w-full bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 text-red-400 rounded px-4 py-2 text-sm font-semibold transition-colors"
+            className="w-full bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 text-red-400 rounded px-4 py-2 text-sm font-semibold transition-colors disabled:opacity-50"
           >
-            {loading ? "Subscribing..." : "?? Subscribe to Alerts"}
+            {loading ? "Subscribing..." : "Subscribe to Alerts"}
           </button>
         </CardContent>
       </Card>
 
+      {/* System Integrations */}
       <Card className="bg-zinc-900 border-zinc-800">
-        <CardHeader>
-          <CardTitle className="text-zinc-100">System Integrations</CardTitle>
-          <CardDescription className="text-zinc-400">Configure external services like Telegram.</CardDescription>
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="text-zinc-100 text-base sm:text-lg">System Integrations</CardTitle>
+          <CardDescription className="text-zinc-400 text-sm">Configure external services like Telegram.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label className="text-base text-zinc-200">Telegram Notifications</Label>
-              <p className="text-sm text-zinc-400">Receive alerts directly to your Telegram device.</p>
+        <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6 pt-0">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-0.5 flex-1 min-w-0">
+              <Label className="text-sm sm:text-base text-zinc-200">Telegram Notifications</Label>
+              <p className="text-xs sm:text-sm text-zinc-400">Receive alerts directly to your Telegram device.</p>
               {!settings.telegramConfigured ? (
-                <p className="text-sm text-red-400">
-                  Telegram is not fully configured. Set backend environment variables: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.
+                <p className="text-xs sm:text-sm text-red-400">
+                  Telegram is not fully configured. Set backend env vars: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.
                 </p>
               ) : settings.telegramEnabled ? (
-                <p className="text-sm text-emerald-400">Telegram is enabled and configured.</p>
+                <p className="text-xs sm:text-sm text-emerald-400">Telegram is enabled and configured.</p>
               ) : (
-                <p className="text-sm text-zinc-400">Telegram is currently disabled.</p>
+                <p className="text-xs sm:text-sm text-zinc-400">Telegram is currently disabled.</p>
               )}
             </div>
             <input
               type="checkbox"
               checked={settings.telegramEnabled}
               onChange={(e) => handleToggle("telegramEnabled", e.target.checked)}
-              className="w-5 h-5 rounded border-zinc-700 bg-zinc-950 text-red-500"
+              className="w-5 h-5 mt-1 flex-shrink-0 rounded border-zinc-700 bg-zinc-950 text-red-500"
             />
           </div>
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label className="text-base text-zinc-200">Dashboard Buzzer</Label>
-              <p className="text-sm text-zinc-400">Play a sound on the dashboard when motion is detected.</p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-0.5 flex-1 min-w-0">
+              <Label className="text-sm sm:text-base text-zinc-200">Dashboard Buzzer</Label>
+              <p className="text-xs sm:text-sm text-zinc-400">Play a sound on the dashboard when motion is detected.</p>
             </div>
             <input
               type="checkbox"
               checked={settings.buzzerEnabled}
               onChange={(e) => handleToggle("buzzerEnabled", e.target.checked)}
-              className="w-5 h-5 rounded border-zinc-700 bg-zinc-950 text-red-500"
+              className="w-5 h-5 mt-1 flex-shrink-0 rounded border-zinc-700 bg-zinc-950 text-red-500"
             />
           </div>
         </CardContent>
       </Card>
 
+      {/* Developer Options */}
       <Card className="bg-zinc-900 border-zinc-800">
-        <CardHeader>
-          <CardTitle className="text-zinc-100">Developer Options</CardTitle>
-          <CardDescription className="text-zinc-400">Advanced settings for testing.</CardDescription>
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="text-zinc-100 text-base sm:text-lg">Developer Options</CardTitle>
+          <CardDescription className="text-zinc-400 text-sm">Advanced settings for testing.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label className="text-base text-zinc-200">PIR Sensor Simulator</Label>
-              <p className="text-sm text-zinc-400">Generate random motion events for testing purposes.</p>
+        <CardContent className="p-4 sm:p-6 pt-0">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-0.5 flex-1 min-w-0">
+              <Label className="text-sm sm:text-base text-zinc-200">PIR Sensor Simulator</Label>
+              <p className="text-xs sm:text-sm text-zinc-400">Generate random motion events for testing purposes.</p>
             </div>
             <input
               type="checkbox"
               checked={settings.simulationMode}
               onChange={(e) => handleToggle("simulationMode", e.target.checked)}
-              className="w-5 h-5 rounded border-zinc-700 bg-zinc-950 text-red-500"
+              className="w-5 h-5 mt-1 flex-shrink-0 rounded border-zinc-700 bg-zinc-950 text-red-500"
             />
           </div>
         </CardContent>
