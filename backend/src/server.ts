@@ -15,24 +15,62 @@ import settingsRoutes from "./routes/settingsRoutes";
 import sensorRoutes from "./routes/sensorRoutes";
 import subscriberRoutes from "./routes/subscriber.routes";
 
+const allowedOrigins = [
+  "https://minor-project-9jmp.vercel.app",
+  "http://localhost:3000", // for local dev
+];
+
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 
-export const io = new Server(server, {
+// export const io = new Server(server, {
+//   cors: {
+//     origin: process.env.CLIENT_URL || "*",
+//     methods: ["GET", "POST"]
+//   }
+// });
+
+
+const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "*",
-    methods: ["GET", "POST"]
-  }
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
 
 app.use(express.json());
-app.use(cors());
-app.use(helmet());
+
+
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// explicitly handle preflight for all routes
+app.options("*", cors());
+
+app.use(express.json());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 app.use(morgan("dev"));
 app.use("/api", apiLimiter);
-
 connectDB();
 
 app.get("/health", (req, res) => {
